@@ -1,0 +1,33 @@
+# Upload to DeployGate
+lane :buildAndroid do
+  puts "Building APK"
+  _result = sh("cd .. && ./buildAndroid.sh", log: false)
+  _lines = _result.split("\n")
+  _apk = ""
+  for _line in _lines do
+  puts "_line = " + _line
+    if _line.end_with?(".apk") then
+       _apk = _line
+    end
+   end
+   puts "APK: " + _apk
+   if _apk.length > 0 then
+     testfairy(
+       api_key: "5d6150e042d7e3f942416c06b4b5de5291f52f17",
+       ipa: _apk,
+       comment: "apk build !",
+      )
+      _apk_url = lane_context[SharedValues::TESTFAIRY_LANDING_PAGE]
+      puts "APK URL: " + _apk_url
+      if (_apk_url.length > 0) then
+        # Notify
+        chatwork(
+          message: "[toall] TestFairy Android Demo cho Flutter:\nAPK: " + _apk_url,
+          roomid: 220095152,
+          success: true,
+          api_token: "ce50ff370f4599a5f974dbde809c87aa"
+         )
+      end
+   end
+end
+
