@@ -31,7 +31,12 @@ jobs:
       - name: Analyze file
         run: flutter analyze
       - name: Build the APK
-        run: fastlane buildAndroid
+        run: flutter build apk --release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
       # Your project will need to have tests in test/ and a dependency on
       # package:test for this step to succeed. Note that Flutter projects will
